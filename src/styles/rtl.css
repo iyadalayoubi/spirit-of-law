@@ -1,0 +1,59 @@
+/* ═══════════════════════════════════════════════════════════════
+   RTL OVERRIDES
+   Applied when <html dir="rtl"> (Arabic mode)
+   LTR-specific layout rules that need mirroring go here.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Text Alignment ──────────────────────────────────────────── */
+[dir="rtl"] .text-start { text-align: right; }
+[dir="ltr"] .text-start { text-align: left; }
+
+/* ── Flex direction mirroring ────────────────────────────────── */
+/* Use .row-responsive instead of flex-row so it auto-mirrors */
+[dir="rtl"] .row-responsive {
+  flex-direction: row-reverse;
+}
+
+/* ── Margin/Padding logical shorthands fallback ──────────────── */
+/* Already handled by CSS logical properties (margin-inline-start etc.)
+   but kept here for explicit overrides if needed */
+
+/* ── Icon flip ───────────────────────────────────────────────── */
+/* Directional icons (arrows, chevrons) need flipping in RTL */
+[dir="rtl"] .icon--directional {
+  transform: scaleX(-1);
+}
+
+/* ── Scroll-reveal direction fix ─────────────────────────────── */
+/* In RTL, "left" means the end, so reverse slide directions */
+[dir="rtl"] .reveal--left {
+  transform: translateX(40px);
+}
+[dir="rtl"] .reveal--left.is-visible {
+  transform: translateX(0);
+}
+
+[dir="rtl"] .reveal--right {
+  transform: translateX(-40px);
+}
+[dir="rtl"] .reveal--right.is-visible {
+  transform: translateX(0);
+}
+
+/* ── Number display ──────────────────────────────────────────── */
+/* Ensure Arabic numerals don't flip with dir */
+[dir="rtl"] .ltr-number {
+  direction: ltr;
+  display: inline-block;
+}
+
+/* ── Border/decoration mirroring ────────────────────────────────*/
+[dir="rtl"] .border-start {
+  border-right: 2px solid var(--color-cyan);
+  border-left: none;
+}
+
+[dir="ltr"] .border-start {
+  border-left: 2px solid var(--color-cyan);
+  border-right: none;
+}

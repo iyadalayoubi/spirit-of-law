@@ -1,0 +1,454 @@
+/* ═══════════════════════════════════════════════════════════════
+   TEAM — Bento grid, 7 members
+   All cards same portrait aspect ratio (3:4), three size tiers.
+   Flat + raised aesthetic: sharp edges, layered shadows, no glow blobs.
+
+   Desktop 5-column grid:
+   LTR   row1: [hero][hero][ med ][ med ][ med ]
+         row2: [hero][hero][ med ][ med ][ med ]
+         row3: [    ][ sm ][ sm  ][ sm  ][    ]
+
+   RTL   row1: [ med ][ med ][ med ][hero][hero]
+         row2: [ med ][ med ][ med ][hero][hero]
+         row3: [    ][ sm  ][ sm  ][ sm ][    ]
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Section shell ───────────────────────────────────────────── */
+.team {
+  position: relative;
+  background: #060F24;
+  padding: clamp(5rem, 10vh, 8rem) clamp(1.5rem, 6vw, 5rem);
+  overflow: hidden;
+}
+
+/* Thin top accent stripe */
+.team::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(10,196,224,0.5) 30%,
+    rgba(10,196,224,0.5) 70%,
+    transparent 100%
+  );
+}
+
+/* ── Section header ──────────────────────────────────────────── */
+.team__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-bottom: clamp(2.5rem, 5vh, 4rem);
+  max-width: 680px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.34,1.2,0.64,1);
+}
+.team--visible .team__header { opacity: 1; transform: translateY(0); }
+/* RTL: in a dir="rtl" document, inline-end is the LEFT side.
+   margin-inline-end: auto pushes from the left → block floats to the right.
+   text-align: right aligns text nodes rightward inside the block. */
+[data-lang="ar"] .team__header {
+  margin-inline-start: 0;
+  margin-inline-end: auto;
+  text-align: right;
+}
+
+.team__eyebrow {
+  display: block;
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-cyan);
+}
+[data-lang="ar"] .team__eyebrow {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+  font-size: var(--text-sm);
+}
+
+.team__headline {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 300;
+  line-height: 1.1;
+  color: var(--color-cream);
+  letter-spacing: -0.01em;
+}
+[data-lang="ar"] .team__headline {
+  font-family: var(--font-arabic);
+  font-weight: 500;
+  font-size: clamp(2rem, 4.5vw, 3.5rem);
+  line-height: 1.25;
+}
+.team__headline-line:nth-child(2) { color: var(--color-cyan); }
+
+.team__body {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: 1.8;
+  color: rgba(246,231,188,0.5);
+  max-width: 52ch;
+}
+[data-lang="ar"] .team__body {
+  font-family: var(--font-arabic);
+  font-size: var(--text-base);
+  line-height: 2;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BENTO GRID
+   5 equal columns. Rows sized so each base cell is 3:4 portrait.
+   Base cell width ≈ (viewport − padding − gaps) / 5.
+   We set row height via aspect-ratio on the cell itself so it
+   is always exactly 3:4 no matter the viewport width.
+══════════════════════════════════════════════════════════════ */
+.team__grid {
+  display: grid;
+  /* Equal 5 columns — hero size controlled by spanning 2 cols × 3 rows.
+     Medium vs small size difference is driven by their aspect-ratio only. */
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: auto auto auto;
+  gap: clamp(6px, 0.8vw, 12px);
+
+  /* LTR named areas — smalls sit under mediums, hero spans all 3 rows */
+  grid-template-areas:
+    "hero hero  m2  m3  m4"
+    "hero hero  m2  m3  m4"
+    "hero hero  s5  s6  s7";
+}
+
+/* RTL: hero on right columns 4-5, equal column widths */
+.team--rtl .team__grid {
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-areas:
+    " m2  m3  m4 hero hero"
+    " m2  m3  m4 hero hero"
+    " s5  s6  s7 hero hero";
+}
+
+/* Assign grid areas */
+.team__grid .tc[data-id="1"] { grid-area: hero; }
+.team__grid .tc[data-id="2"] { grid-area: m2;   }
+.team__grid .tc[data-id="3"] { grid-area: m3;   }
+.team__grid .tc[data-id="4"] { grid-area: m4;   }
+.team__grid .tc[data-id="5"] { grid-area: s5;   }
+.team__grid .tc[data-id="6"] { grid-area: s6;   }
+.team__grid .tc[data-id="7"] { grid-area: s7;   }
+
+/* Medium tier (2,3,4): taller portrait — larger than small cards */
+.team__grid .tc[data-id="2"],
+.team__grid .tc[data-id="3"],
+.team__grid .tc[data-id="4"] {
+  aspect-ratio: 3 / 5;
+}
+
+/* Small tier (5,6,7): shorter portrait — smaller than medium cards */
+.team__grid .tc[data-id="5"],
+.team__grid .tc[data-id="6"],
+.team__grid .tc[data-id="7"] {
+  aspect-ratio: 3 / 2.8;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MEMBER CARD  — flat + raised
+   Every card is the same portrait shape (aspect-ratio 3/4).
+   The hero cell is 2×2 columns/rows so it looks 2× larger but
+   keeps the same proportions.
+══════════════════════════════════════════════════════════════ */
+.tc {
+  /* Shape: 3:4 portrait, consistent across all sizes */
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  cursor: pointer;
+
+  /* Flat + raised look */
+  background: #0B1E45;
+  border-radius: 4px;
+  /* Multi-layer shadow: deep drop below, bright top edge as "raised" highlight */
+  box-shadow:
+    0 1px 0 0 rgba(10,196,224,0.25) inset,   /* top inner highlight edge */
+    0 -1px 0 0 rgba(0,0,0,0.6) inset,         /* bottom inner shadow edge */
+    0 8px 24px rgba(0,0,0,0.55),              /* deep drop shadow */
+    0 2px 4px rgba(0,0,0,0.4);               /* close contact shadow */
+  transition:
+    box-shadow 0.35s ease,
+    transform  0.35s cubic-bezier(0.34,1.2,0.64,1);
+
+  /* Entrance — starts scaled down + transparent, pops in with spring */
+  opacity: 0;
+  transform: scale(0.82);
+  transform-origin: center center;
+}
+.team--visible .tc {
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    opacity   0.5s ease             calc(var(--delay, 0s)),
+    transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--delay, 0s)),
+    box-shadow 0.35s ease,
+    filter    0.35s ease;
+}
+
+/* Hover lift — uses scale(1) as base so it doesn't fight pop-in transform */
+.team--visible .tc:hover {
+  box-shadow:
+    0 1px 0 0 rgba(10,196,224,0.5) inset,
+    0 -1px 0 0 rgba(0,0,0,0.6) inset,
+    0 20px 48px rgba(0,0,0,0.7),
+    0 4px 8px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(10,196,224,0.35);
+  transform: scale(1) translateY(-4px);
+}
+
+/* Top accent line — glows on hover */
+.tc::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(10,196,224,0.4),
+    rgba(10,196,224,0.4),
+    transparent
+  );
+  z-index: 4;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.tc:hover::before { opacity: 1; }
+
+/* ── Photo ────────────────────────────────────────────────────
+   CRITICAL: background-size: cover + background-position: center 15%
+   ensures the face (top third of portrait) is always visible.
+   The cell has a fixed 3:4 aspect ratio so the photo shape never
+   changes — no unexpected cropping at extreme viewports.
+────────────────────────────────────────────────────────────── */
+.tc__photo {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center 15%;    /* keep face in frame */
+  background-color: #040d20;
+  /* Brand gradient fallback when image is missing */
+  background-image:
+    linear-gradient(160deg, #071A47 0%, #0B2D72 45%, #0992C2 100%);
+  transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+.tc:hover .tc__photo { transform: scale(1.05); }
+
+/* ── Resting gradient scrim + name ──────────────────────────── */
+.tc__label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(0.75rem, 1.8vw, 1.25rem);
+  /* Strong bottom scrim so name is always legible */
+  background: linear-gradient(
+    to top,
+    rgba(4,13,30,0.92) 0%,
+    rgba(4,13,30,0.5)  35%,
+    transparent        65%
+  );
+  z-index: 2;
+  transition: opacity 0.3s ease;
+}
+.tc:hover .tc__label { opacity: 0; }
+
+.tc__name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(0.8rem, 1.4vw, 1.1rem);
+  font-weight: 400;
+  color: var(--color-cream);
+  line-height: 1.3;
+}
+[data-lang="ar"] .tc__name {
+  font-family: var(--font-arabic);
+  font-weight: 600;
+  font-size: clamp(0.82rem, 1.5vw, 1.05rem);
+}
+
+.tc__specialty-tag {
+  display: inline-block;
+  margin-bottom: var(--space-2);
+  font-size: clamp(0.58rem, 0.9vw, 0.7rem);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-cyan);
+  opacity: 0.8;
+}
+[data-lang="ar"] .tc__specialty-tag {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+  font-size: clamp(0.65rem, 1vw, 0.78rem);
+}
+
+/* Hero card: slightly larger text */
+.tc--hero .tc__name {
+  font-size: clamp(1rem, 1.8vw, 1.4rem);
+}
+.tc--hero .tc__specialty-tag {
+  font-size: clamp(0.65rem, 1vw, 0.78rem);
+}
+
+/* ── Hover overlay — slides up from bottom ───────────────────── */
+.tc__overlay {
+  position: absolute;
+  inset: 0;
+  /* Flat, opaque navy with a subtle blue tint */
+  background: linear-gradient(
+    175deg,
+    #071428 0%,
+    #0B2860 55%,
+    #0C3580 100%
+  );
+  display: flex;
+  align-items: flex-end;
+  padding: clamp(1rem, 2.5vw, 1.75rem);
+  z-index: 3;
+
+  transform: translateY(100%);
+  opacity: 0;
+  transition:
+    transform 0.4s cubic-bezier(0.34,1.1,0.64,1),
+    opacity   0.3s ease;
+}
+.tc:hover .tc__overlay {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.tc__overlay-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.tc__overlay-specialty {
+  font-size: clamp(0.58rem, 0.9vw, 0.7rem);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-cyan);
+}
+[data-lang="ar"] .tc__overlay-specialty {
+  font-family: var(--font-arabic);
+  letter-spacing: 0;
+  font-size: clamp(0.65rem, 1vw, 0.8rem);
+}
+
+.tc__overlay-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(0.95rem, 1.8vw, 1.35rem);
+  font-weight: 400;
+  color: var(--color-cream);
+  line-height: 1.2;
+}
+[data-lang="ar"] .tc__overlay-name {
+  font-family: var(--font-arabic);
+  font-weight: 600;
+  font-size: clamp(0.9rem, 1.7vw, 1.25rem);
+}
+
+.tc__overlay-title {
+  margin: 0;
+  font-size: clamp(0.68rem, 1.05vw, 0.825rem);
+  color: rgba(246,231,188,0.55);
+  line-height: 1.5;
+}
+[data-lang="ar"] .tc__overlay-title {
+  font-family: var(--font-arabic);
+  font-size: clamp(0.72rem, 1.1vw, 0.875rem);
+}
+
+/* Bio only shown on hero card — capped at 3 lines */
+.tc__overlay-bio {
+  margin: 0;
+  margin-top: var(--space-1);
+  font-size: clamp(0.7rem, 1vw, 0.8rem);
+  line-height: 1.7;
+  color: rgba(246,231,188,0.45);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+[data-lang="ar"] .tc__overlay-bio {
+  font-family: var(--font-arabic);
+  font-size: clamp(0.72rem, 1.05vw, 0.82rem);
+  line-height: 1.9;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════════════════ */
+
+/* Tablet: 3 columns — hero spans 3 rows, mediums + smalls fill col 3 */
+@media (max-width: 960px) {
+  .team__grid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-areas:
+      "hero hero m2"
+      "hero hero m3"
+      "hero hero m4"
+      "s5   s6   s7";
+  }
+  .team--rtl .team__grid {
+    grid-template-areas:
+      "m2 hero hero"
+      "m3 hero hero"
+      "m4 hero hero"
+      "s5 s6   s7  ";
+  }
+}
+
+/* Mobile: 2 columns */
+@media (max-width: 600px) {
+  .team {
+    padding: 4rem 1rem;
+  }
+  .team__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    grid-template-areas:
+      "hero hero"
+      "hero hero"
+      "m2   m3  "
+      "m4   s5  "
+      "s6   s7  ";
+  }
+  .team--rtl .team__grid {
+    grid-template-areas:
+      "hero hero"
+      "hero hero"
+      "m2   m3  "
+      "m4   s5  "
+      "s6   s7  ";
+  }
+  .tc__overlay-bio { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tc, .tc__photo, .tc__overlay, .team__header {
+    transition: none !important;
+  }
+  .tc { opacity: 1 !important; transform: scale(1) !important; }
+  .team__header { opacity: 1 !important; transform: none !important; }
+}

@@ -1,0 +1,159 @@
+/* ═══════════════════════════════════════════════════════════════
+   ANIMATIONS — Keyframes + Scroll-reveal utilities
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Keyframes ───────────────────────────────────────────────── */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeLeft {
+  from { opacity: 0; transform: translateX(32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeRight {
+  from { opacity: 0; transform: translateX(-32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-60px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(60px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes drawLine {
+  from { scaleX: 0; }
+  to   { scaleX: 1; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes pulse-gold {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(10, 196, 224, 0.3); }
+  50%       { box-shadow: 0 0 0 12px rgba(201, 169, 110, 0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Scroll-reveal Base State ────────────────────────────────── */
+/* Elements start hidden; .is-visible class triggers the animation */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Directional variants */
+.reveal--left {
+  transform: translateX(-40px);
+}
+.reveal--left.is-visible {
+  transform: translateX(0);
+}
+
+.reveal--right {
+  transform: translateX(40px);
+}
+.reveal--right.is-visible {
+  transform: translateX(0);
+}
+
+.reveal--scale {
+  transform: scale(0.94);
+}
+.reveal--scale.is-visible {
+  transform: scale(1);
+}
+
+/* Stagger delay utilities */
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }
+.reveal-delay-6 { transition-delay: 0.6s; }
+
+/* ── Gold shimmer utility ────────────────────────────────────── */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-cyan-dark) 0%,
+    var(--color-cyan-light) 50%,
+    var(--color-cyan-dark) 100%
+  );
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Decorative line draw ────────────────────────────────────── */
+.line-draw {
+  display: block;
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-cyan), transparent);
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+[dir="rtl"] .line-draw {
+  transform-origin: right center;
+  background: linear-gradient(270deg, var(--color-cyan), transparent);
+}
+
+.is-visible .line-draw,
+.line-draw.is-visible {
+  transform: scaleX(1);
+}
+
+/* ── Respect reduced motion ──────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal--left,
+  .reveal--right,
+  .reveal--scale {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .shimmer { animation: none; }
+  .line-draw { transform: scaleX(1); }
+}

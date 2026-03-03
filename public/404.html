@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Spirit of Law</title>
+    <script>
+      // GitHub Pages SPA redirect trick.
+      // Stores the full path in sessionStorage then redirects to /
+      // The index.html script below reads it back and restores the URL.
+      var path = window.location.pathname + window.location.search + window.location.hash
+      sessionStorage.setItem('sol_redirect', path)
+      window.location.replace('/')
+    </script>
+  </head>
+  <body></body>
+</html>
