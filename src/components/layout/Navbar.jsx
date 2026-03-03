@@ -93,7 +93,7 @@ export default function Navbar() {
             aria-label={isRTL ? 'روح النظام — الرئيسية' : 'Spirit of Law — Home'}
           >
             <img
-              src="/logo.svg"
+              src={`${import.meta.env.BASE_URL}logo.svg`}
               alt="Spirit of Law"
               className="navbar__logo-mark"
             />
@@ -147,7 +147,7 @@ export default function Navbar() {
         <nav className="mobile-menu__panel">
           <div className="mobile-menu__header">
             <img
-              src="/logo.svg"
+              src={`${import.meta.env.BASE_URL}logo.svg`}
               alt="Spirit of Law"
               className="navbar__logo-mark navbar__logo-mark--sm"
             />

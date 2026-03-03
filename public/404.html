@@ -5,11 +5,24 @@
     <title>Spirit of Law</title>
     <script>
       // GitHub Pages SPA redirect trick.
-      // Stores the full path in sessionStorage then redirects to /
-      // The index.html script below reads it back and restores the URL.
-      var path = window.location.pathname + window.location.search + window.location.hash
-      sessionStorage.setItem('sol_redirect', path)
-      window.location.replace('/')
+      // When GitHub Pages 404s on a direct URL or refresh, it serves this file.
+      // We store the intended path in sessionStorage, then redirect to the app
+      // root so React Router can handle the route on the client side.
+      //
+      // The base path (/spirit-of-law/) is read from the script's own src URL
+      // so this file works for any repo name without modification.
+      var base = '/'
+      var scripts = document.getElementsByTagName('script')
+      // Derive base from current location: everything up to the first path segment
+      var segments = window.location.pathname.split('/')
+      // On GitHub Pages: /repo-name/some/path → base is /repo-name/
+      if (segments.length > 1 && segments[1] !== '') {
+        base = '/' + segments[1] + '/'
+      }
+      // Store the full intended path (minus the base) so the app can restore it
+      var intended = window.location.pathname + window.location.search + window.location.hash
+      sessionStorage.setItem('sol_redirect', intended)
+      window.location.replace(base)
     </script>
   </head>
   <body></body>

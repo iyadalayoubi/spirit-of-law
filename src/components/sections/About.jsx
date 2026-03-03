@@ -143,7 +143,7 @@ function FlipCard({ card, resetSignal }) {
             className="fc__img"
             style={{
               backgroundImage:
-                `url(${card.image || `/images/why-us-${card.id}.jpg`})`,
+                `url(${card.image ? `${import.meta.env.BASE_URL}${card.image.replace(/^\//, "")}` : `${import.meta.env.BASE_URL}images/why-us-${card.id}.jpg`})`,
             }}
           />
           <div className="fc__front-overlay">

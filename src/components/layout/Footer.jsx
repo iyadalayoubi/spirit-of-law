@@ -35,7 +35,7 @@ export default function Footer() {
         {/* ── Brand column ─────────────────────────────── */}
         <div className="ft__brand">
           <a href="#hero" className="ft__logo" onClick={(e) => { e.preventDefault(); scrollTo('hero') }} aria-label={isRTL ? 'روح القانون — الرئيسية' : 'Spirit of Law — Home'}>
-            <img src="/logo.svg" alt="" className="ft__logo-img" aria-hidden="true" />
+            <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="" className="ft__logo-img" aria-hidden="true" />
             <div className="ft__logo-text">
               <span className="ft__logo-primary">{isRTL ? 'روح النظام' : 'Spirit of Law'}</span>
               <span className="ft__logo-secondary">{isRTL ? 'للمحاماة والاستشارات القانونية' : 'Law Firm'}</span>

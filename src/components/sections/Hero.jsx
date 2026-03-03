@@ -41,7 +41,7 @@ export default function Hero() {
       <video
         ref={videoRef}
         className="hero__video"
-        src="/videos/hero.mp4"
+        src={`${import.meta.env.BASE_URL}videos/hero.mp4`}
         muted
         playsInline
         preload="auto"

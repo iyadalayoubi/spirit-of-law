@@ -37,7 +37,7 @@ function MemberCard({ member, tier, index }) {
       {/* Photo — covers cell, face anchored to upper portion */}
       <div
         className="tc__photo"
-        style={{ backgroundImage: `url(/images/team-${member.id}.png)` }}
+        style={{ backgroundImage: `url(${import.meta.env.BASE_URL}images/team-${member.id}.png)` }}
         role="img"
         aria-label={member.name}
       />
